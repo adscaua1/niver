@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Para Você, Meu Amor 💖</title>
+    <meta name="description" content="Uma jornada de memórias e amor.">
+
+    <!-- Fontes: uma serifada para títulos, uma manuscrita para toques afetivos, uma neutra para leitura -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- ============================================= -->
+    <!-- CANVAS DE FUNDO: estrelas + partículas + chuva de corações/pétalas -->
+    <!-- Fica fixo atrás de tudo, ativo do início ao fim -->
+    <!-- ============================================= -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Botão flutuante de música (fica visível após a abertura) -->
+    <button id="music-toggle" class="music-btn hidden" aria-label="Tocar ou pausar música">
+        <span class="music-icon">♪</span>
+    </button>
+    <audio id="bg-audio" loop preload="none">
+        <!-- Substitua "musica.mp3" pelo caminho da música de vocês, na mesma pasta deste arquivo -->
+        <source src="./img/Gusttavo Lima - 60 Segundos (Gusttavo Lima e Você - Ao Vivo) (1).mp4" type="audio/mpeg">
+    </audio>
+
+    <!-- Barra de progresso do scroll -->
+    <div class="scroll-progress">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- TELA DE ABERTURA -->
+    <!-- ============================================= -->
+    <section id="tela-abertura" class="tela-abertura">
+        <div class="abertura-conteudo">
+            <p class="abertura-eyebrow">um presente para</p>
+            <h1 class="abertura-nome" id="abertura-nome">Você</h1>
+            <p class="abertura-sub">Existe uma pequena constelação esperando por você aqui dentro.</p>
+            <button id="btn-abrir" class="btn-abrir">
+                <span>Abrir com carinho</span>
+                <span class="btn-coracao">♥</span>
+            </button>
+        </div>
+        <div class="abertura-decor abertura-decor-1"></div>
+        <div class="abertura-decor abertura-decor-2"></div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- CONTEÚDO PRINCIPAL (revelado após clique em "Abrir") -->
+    <!-- ============================================= -->
+    <main id="conteudo-principal" class="conteudo-principal hidden">
+
+        <!-- HERO / SAUDAÇÃO COM MÁQUINA DE ESCREVER -->
+        <section class="secao hero" id="hero">
+            <div class="hero-conteudo reveal">
+                <p class="eyebrow">feliz aniversário</p>
+                <h1 class="hero-titulo" id="typewriter-titulo"></h1>
+                <p class="hero-texto" id="typewriter-texto"></p>
+                <a href="#contador" class="scroll-hint" aria-label="Rolar para baixo">
+                    <span></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- CONTADOR DE TEMPO JUNTOS -->
+        <section class="secao contador-secao" id="contador">
+            <h2 class="titulo-secao reveal">Nosso tempo, contado em segundos</h2>
+            <p class="subtitulo-secao reveal">porque cada instante ao seu lado merece ser guardado</p>
+            <div class="contador-grid reveal">
+                <div class="contador-item">
+                    <span class="contador-numero" id="cont-dias">0</span>
+                    <span class="contador-label">dias</span>
+                </div>
+                <div class="contador-item">
+                    <span class="contador-numero" id="cont-horas">0</span>
+                    <span class="contador-label">horas</span>
+                </div>
+                <div class="contador-item">
+                    <span class="contador-numero" id="cont-minutos">0</span>
+                    <span class="contador-label">minutos</span>
+                </div>
+                <div class="contador-item">
+                    <span class="contador-numero" id="cont-segundos">0</span>
+                    <span class="contador-label">segundos</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE - NOSSA HISTÓRIA -->
+        <section class="secao timeline-secao" id="timeline">
+            <h2 class="titulo-secao reveal">Nossa história</h2>
+            <p class="subtitulo-secao reveal">um mapa de tudo o que já vivemos</p>
+            <div class="timeline" id="timeline-lista"><!-- preenchido via JS a partir de CONFIG.timeline --></div>
+        </section>
+
+        <!-- GALERIA DE FOTOS (POLAROID + LIGHTBOX) -->
+        <section class="secao galeria-secao" id="galeria">
+            <h2 class="titulo-secao reveal">Instantes nossos</h2>
+            <p class="subtitulo-secao reveal">toque em uma foto para vê-la de perto</p>
+            <div class="galeria-grid" id="galeria-grid"><!-- preenchido via JS a partir de CONFIG.galeria --></div>
+        </section>
+
+        <!-- LIGHTBOX (modal de foto ampliada) -->
+        <div class="lightbox" id="lightbox">
+            <button class="lightbox-fechar" id="lightbox-fechar" aria-label="Fechar">✕</button>
+            <div class="lightbox-conteudo">
+                <div class="lightbox-foto" id="lightbox-foto"></div>
+                <p class="lightbox-legenda" id="lightbox-legenda"></p>
+            </div>
+        </div>
+
+        <!-- CARTINHAS INTERATIVAS -->
+        <section class="secao cartas-secao" id="cartas">
+            <h2 class="titulo-secao reveal">Cartinhas para você abrir</h2>
+            <p class="subtitulo-secao reveal">escolha um envelope, sem pressa</p>
+            <div class="cartas-grid" id="cartas-grid"><!-- preenchido via JS a partir de CONFIG.cartas --></div>
+        </section>
+
+        <!-- BALÕES PARA ESTOURAR -->
+        <section class="secao baloes-secao" id="baloes">
+            <h2 class="titulo-secao reveal">Estoure os balões</h2>
+            <p class="subtitulo-secao reveal">cada um deles guarda um motivo para sorrir</p>
+            <div class="baloes-palco" id="baloes-palco"><!-- balões nascem aqui via JS --></div>
+            <p class="baloes-progresso" id="baloes-progresso">0 de 0 estourados</p>
+        </section>
+
+        <!-- QUIZ DO CASAL -->
+        <section class="secao quiz-secao" id="quiz">
+            <h2 class="titulo-secao reveal">Quiz do casal</h2>
+            <p class="subtitulo-secao reveal">vamos ver o quanto você me conhece 😉</p>
+            <div class="quiz-card reveal" id="quiz-card">
+                <div class="quiz-progresso">
+                    <div class="quiz-progresso-barra" id="quiz-progresso-barra"></div>
+                </div>
+                <p class="quiz-contador" id="quiz-contador">Pergunta 1 de 1</p>
+                <h3 class="quiz-pergunta" id="quiz-pergunta">Carregando...</h3>
+                <div class="quiz-opcoes" id="quiz-opcoes"></div>
+                <p class="quiz-feedback" id="quiz-feedback"></p>
+            </div>
+            <div class="quiz-resultado hidden" id="quiz-resultado">
+                <h3 id="quiz-resultado-titulo"></h3>
+                <p id="quiz-resultado-texto"></p>
+                <button class="btn-secundario" id="quiz-reiniciar">Jogar novamente</button>
+            </div>
+        </section>
+
+        <!-- MINI JOGO: ENCONTRE OS CORAÇÕES ESCONDIDOS -->
+        <section class="secao jogo-secao" id="jogo">
+            <h2 class="titulo-secao reveal">Encontre os corações escondidos</h2>
+            <p class="subtitulo-secao reveal">tem <span id="jogo-total-texto">alguns</span> corações escondidos aqui
+                embaixo</p>
+            <div class="jogo-info reveal">
+                <span>Encontrados: <strong id="jogo-encontrados">0</strong>/<strong id="jogo-total">0</strong></span>
+                <span>Melhor tempo: <strong id="jogo-recorde">--</strong></span>
+                <button class="btn-secundario" id="jogo-reiniciar">Reiniciar</button>
+            </div>
+            <div class="jogo-palco" id="jogo-palco"><!-- corações escondidos nascem aqui via JS --></div>
+        </section>
+
+        <!-- ÁRVORE DO AMOR -->
+        <section class="secao arvore-secao" id="arvore">
+            <h2 class="titulo-secao reveal">Nossa árvore do amor</h2>
+            <p class="subtitulo-secao reveal">toque nas folhas para ler o que elas guardam</p>
+            <div class="arvore-wrap reveal">
+                <svg class="arvore-svg" viewBox="0 0 400 420" id="arvore-svg" aria-hidden="true">
+                    <!-- tronco -->
+                    <path d="M195 420 C195 340 190 300 200 260 C210 220 195 200 200 160" stroke="#7a4a3a"
+                        stroke-width="14" fill="none" stroke-linecap="round" />
+                    <path d="M200 260 C170 240 150 230 130 235" stroke="#7a4a3a" stroke-width="9" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M200 220 C230 205 250 200 270 210" stroke="#7a4a3a" stroke-width="9" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M198 165 C185 140 190 120 175 100" stroke="#7a4a3a" stroke-width="7" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M200 165 C215 140 215 118 230 98" stroke="#7a4a3a" stroke-width="7" fill="none"
+                        stroke-linecap="round" />
+                    <!-- copa (decorativa, atrás das folhas clicáveis) -->
+                    <circle cx="200" cy="130" r="115" fill="url(#copaGrad)" opacity="0.35" />
+                    <defs>
+                        <radialGradient id="copaGrad" cx="50%" cy="45%" r="60%">
+                            <stop offset="0%" stop-color="#f7c6d9" />
+                            <stop offset="100%" stop-color="#e0668c" stop-opacity="0.2" />
+                        </radialGradient>
+                    </defs>
+                </svg>
+                <div class="arvore-folhas" id="arvore-folhas"><!-- folhas clicáveis nascem aqui via JS --></div>
+            </div>
+        </section>
+
+        <!-- CÉU ESTRELADO - MOTIVOS PARA AMAR (elemento-assinatura da página) -->
+        <section class="secao ceu-secao" id="ceu">
+            <h2 class="titulo-secao reveal claro">Uma constelação de motivos</h2>
+            <p class="subtitulo-secao reveal claro">cada estrela guarda um motivo pelo qual eu te amo. toque em todas
+                para completar nossa constelação</p>
+            <div class="ceu-palco" id="ceu-palco">
+                <canvas id="ceu-linhas"></canvas>
+                <!-- estrelas nascem aqui via JS -->
+            </div>
+            <p class="ceu-progresso" id="ceu-progresso">0 de 0 estrelas descobertas</p>
+            <div class="ceu-revelacao hidden" id="ceu-revelacao">
+                <span class="ceu-revelacao-estrela">✦</span>
+                <p id="ceu-revelacao-texto"></p>
+            </div>
+        </section>
+
+        <!-- CAIXA DE PRESENTE -->
+        <section class="secao presente-secao" id="presente">
+            <h2 class="titulo-secao reveal">Um último presente</h2>
+            <p class="subtitulo-secao reveal">abra quando estiver pronta</p>
+            <div class="presente-caixa reveal" id="presente-caixa" role="button" tabindex="0"
+                aria-label="Abrir presente">
+                <div class="caixa-tampa"></div>
+                <div class="caixa-laco">🎀</div>
+                <div class="caixa-corpo"></div>
+            </div>
+            <p class="presente-dica" id="presente-dica">toque na caixa</p>
+        </section>
+
+        <!-- MENSAGEM FINAL -->
+        <section class="secao final-secao" id="final">
+            <div class="final-conteudo reveal">
+                <p class="final-eyebrow">para você</p>
+                <h2 class="final-titulo" id="final-titulo">Feliz aniversário, meu amor</h2>
+                <p class="final-texto" id="final-texto"></p>
+                <p class="final-assinatura" id="final-assinatura"></p>
+                <button class="btn-chuva" id="btn-chuva">Fazer chover corações ✨</button>
+            </div>
+        </section>
+
+        <!-- RODAPÉ -->
+        <footer class="rodape">
+            <p id="rodape-frase">o amor não se mede em dias, mas em quantas vezes o coração sorri</p>
+            <p class="rodape-assinatura">feito com ♥ para você</p>
+        </footer>
+
+    </main>
+
+    <!-- Canvas usado exclusivamente para a explosão de confete do presente -->
+    <canvas id="confete-canvas"></canvas>
+
+    <script src="./js/script.js"></script>
+</body>
+
+</html>
